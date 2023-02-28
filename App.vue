@@ -1,4 +1,7 @@
 <template>
+  <div class="fixed bottom-0 right-0 p-5">
+    {{ currentPage + 1 }} / {{ pages.length }}
+  </div>
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
@@ -10,14 +13,25 @@ const pages = [
   { name: "index", route: "/" },
   { name: "test", route: "/test" },
 ];
-const currentPage = ref(1);
 const router = useRouter();
+
+const currentPage = computed(() => {
+  return pages
+    .map((e) => e.route)
+    .indexOf(String(router.currentRoute.value.path));
+});
+
 watch(pressed, () => {
-  router.push({ path: pages[currentPage.value].route });
+  if (currentPage.value + 1 >= pages.length) return;
+  router.push({ path: pages[currentPage.value + 1].route });
 });
 </script>
 
 <style>
+body {
+  overflow: hidden;
+}
+
 .page-left-enter-active,
 .page-right-enter-active,
 .page-left-leave-active,
