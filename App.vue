@@ -3,14 +3,14 @@
     {{ currentPage + 1 }} / {{ pages.length }}
   </div>
   <NuxtLayout>
-    <NuxtPage />
+    <NuxtPage @click="click" @nextPage="click(false)" />
   </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
-const pressed = reactive(useMousePressed());
 const pages = [
   { name: "index", route: "/" },
+  { name: "jip", route: "/jip" },
   { name: "test", route: "/test" },
 ];
 const router = useRouter();
@@ -21,10 +21,11 @@ const currentPage = computed(() => {
     .indexOf(String(router.currentRoute.value.path));
 });
 
-watch(pressed, () => {
+function click(isButton?: boolean) {
+  if (pages[currentPage.value].name === "jip" && isButton) return;
   if (currentPage.value + 1 >= pages.length) return;
   router.push({ path: pages[currentPage.value + 1].route });
-});
+}
 </script>
 
 <style>
